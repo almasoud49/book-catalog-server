@@ -19,9 +19,9 @@ export type IBook = {
   title: string;
   author: string;
   genre: string;
-  publicationYear?: string;
+  publicationDate?: string;
   image?: string;
-  addedBy: Types.ObjectId | IUser;
+  addedBy?: Types.ObjectId | IUser;
   wishedBy?: string[] | null;
   readList?: IReading[] | null;
   review?: IReview[] | null;
@@ -36,6 +36,7 @@ export type IBookSearch = {
 };
 
 export type IBookFilters = {
+  searchTerm?: string;
   genre?: string;
   publicationYear?: string;
 };

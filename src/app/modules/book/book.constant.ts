@@ -1,12 +1,12 @@
 import { IBookFilters, IBookSearch } from "./book.interface";
 
-export const bookSearchFields: (keyof IBookSearch)[] = [
+export const bookSearchableFields: (keyof IBookSearch)[] = [
   'genre',
   'author',
   'title'
 ];
 
-export const bookFilterFields: (keyof IBookFilters)[]= [
+export const bookFilterableFields: (keyof IBookFilters)[]= [
   'genre',
   'publicationYear'
 ];
