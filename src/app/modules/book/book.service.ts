@@ -5,7 +5,7 @@ import { IPaginationOptions } from "../../../interfaces/pagination";
 import { IGenericResponse } from "../../../interfaces/common";
 import { paginationHelpers } from "../../../helpers/paginationHelper";
 import { bookSearchableFields } from "./book.constant";
-import { SortOrder } from "mongoose";
+import { SortOrder, Types } from "mongoose";
 
 const createBook = async(
   payload: IBook,
@@ -81,10 +81,18 @@ const getAllBooks = async(
   };
 };
   
-
+const getSingleBook = async (
+  id: string | Types.ObjectId
+): Promise<IGenericResponse<IBook | null>> => {
+  const result = await Book.findOne({ _id: id }).lean();
+  return {
+    data: result,
+  };
+};
 
 
 export const BookService = {
   createBook,
-  getAllBooks
+  getAllBooks,
+  getSingleBook
 }
