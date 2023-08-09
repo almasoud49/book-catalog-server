@@ -1,16 +1,16 @@
-import { Error as MongooseError, CastError } from 'mongoose';
+import mongoose from 'mongoose';
 import { IGenericErrorMessage } from '../interfaces/IGenericErrorMessage';
 import { IGenericErrorResponse } from '../interfaces/iGenericErrorResponse';
 
 const handleMongooseValidationError = (
-  err: MongooseError.ValidationError
+  err: mongoose.Error.ValidationError
 ): IGenericErrorResponse => {
   
   const error: IGenericErrorMessage[] = Object.values(err.errors).map(
-    (er: MongooseError.ValidatorError | CastError) => {
+    (er: mongoose.Error.ValidatorError | mongoose.Error.CastError) => {
       return {
-        path: er.path,
-        message: er.message,
+        path: er?.path,
+        message: er?.message,
       };
     }
   );
