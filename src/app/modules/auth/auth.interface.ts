@@ -6,16 +6,14 @@ export type IUser = {
   password: string;
 };
 
-export type ILogicalUserResponse = {
+export type ILoginUserResponse = {
   userId: Types.ObjectId;
   accessToken: string;
   refreshToken?: string;
 };
 
 export type UserModel = {
-  isUserExist(
-    id: string,
-  ): Promise<Pick<IUser, 'email' | 'password' | '_id'>>;
+  isUserExist(id: string): Promise<Pick<IUser, 'email' | 'password' | '_id'>>;
 
   isUserExistWithEmail(
     email: string,

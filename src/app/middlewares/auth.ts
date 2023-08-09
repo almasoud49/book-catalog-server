@@ -1,5 +1,5 @@
 import {Request,Response, NextFunction } from "express";
-import ApiError from "../../errors/ApiError";
+import ApiError from '../../errors/apiError'
 import httpStatus from "http-status";
 import { jwtHelpers } from "../../helpers/jwtHelpers";
 import config from "../../config";
