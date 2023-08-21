@@ -25,19 +25,26 @@ export const UserSchema = new Schema<IUser, UserModel>(
 UserSchema.statics.isUserExist = async function (
   _id: string,
 ): Promise<Pick<IUser, 'email' | 'password'> | null> {
-  return await User.findOne({ _id }, { email: 1, password: 1 });
+  
+  return await User.findOne(
+    { _id }, 
+    { email: 1, password: 1 });
 };
 
 UserSchema.statics.isUserExistWithEmail = async function (
   email: string,
 ): Promise<Pick<IUser, 'email' | 'password'> | null> {
-  return await User.findOne({ email }, { email: 1, password: 1 });
+  
+  return await User.findOne(
+    { email }, 
+    { email: 1, password: 1 });
 };
 
 UserSchema.statics.isPasswordMatched = async function (
   givenPassword: string,
   savedPassword: string,
 ): Promise<boolean> {
+  
   return await bcrypt.compare(givenPassword, savedPassword);
 };
 

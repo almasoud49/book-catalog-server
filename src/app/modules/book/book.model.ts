@@ -1,81 +1,44 @@
 import { Schema, model } from "mongoose";
-import { IBook } from "./book.interface";
+import { BookModel, IBook } from "./book.interface";
 
-const bookSchema = new Schema<IBook>(
+export const BookSchema = new Schema<IBook>(
   {
-    title: {
-      type: String,
-      required: true,
+    title: { 
+      type: String, 
+      required: true 
     },
-
-    author: {
-      type: String,
-      required: true,
+    author: { 
+      type: String, 
+      required: true 
     },
-
-    genre: {
-      type: String,
-      required: true,
+    genre: { 
+      type: String, 
+      required: true 
     },
-
-    publicationDate: {
-      type: String,
+    publicationDate: { 
+      type: String, 
+      required: true 
     },
-
-    image: {
-      type: String,
-      required:true,
+    reviews: { 
+      type: [], 
+      required: false 
     },
-
-    addedBy: {
-      type: String,
+    createdBy: { 
+      type: Schema.Types.ObjectId, 
+      required: false, 
+      ref: 'User' 
     },
-
-    wishedBy: {
-      type: [String],
-      default: null,
-    },
-
-    readList: {
-      type: [
-        {
-          emailAddress: {
-            type: String,
-            required: true,
-          },
-          status: {
-            type: String,
-            enum: ['reading', 'read soon', 'finished'],
-          },
-        },
-      ],
-      default: null,
-    },
-    review: {
-      type: [
-        {
-          name: {
-            type: String,
-            required: true,
-          },
-          date: {
-            type: String,
-            required: true,
-          },
-          body: {
-            type: String,
-            required: true,
-          },
-        },
-      ],
-      default: null,
+    updatedBy: { 
+      type: Schema.Types.ObjectId, 
+      required: false, 
+      ref: 'User' 
     },
   },
-  {
-    timestamps: true,
+  { 
+    timestamps: true, 
+    versionKey: false 
   }
 );
 
-const Book = model<IBook>('Book', bookSchema);
+export const Book = model<IBook, BookModel>('Book', BookSchema);
 
-export default Book;

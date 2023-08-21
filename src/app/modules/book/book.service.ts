@@ -1,35 +1,31 @@
-import { JwtPayload } from "jsonwebtoken";
-import { IBook, IBookFilters } from "./book.interface";
-import Book from "./book.model";
-import { IPaginationOptions } from "../../../interfaces/pagination";
-import { IGenericResponse } from "../../../interfaces/common";
-import { paginationHelpers } from "../../../helpers/paginationHelper";
-import { bookSearchableFields } from "./book.constant";
-import { SortOrder, Types } from "mongoose";
+import { JwtPayload } from 'jsonwebtoken';
+import { IBook, IBookFilters } from './book.interface';
+import {Book} from './book.model';
+import { IPaginationOptions } from '../../../interfaces/pagination';
+import { IGenericResponse } from '../../../interfaces/common';
+import { paginationHelpers } from '../../../helpers/paginationHelper';
+import { BookSearchableFields} from './book.constant';
+import { SortOrder, Types } from 'mongoose';
 
-const createBook = async(
-  payload: IBook,
-  
-): Promise<IBook> => {
-  
+const createBook = async (payload: IBook): Promise<IBook | null> => {
   const result = await Book.create(payload);
   return result;
 };
 
-const getAllBooks = async(
+const getAllBooks = async (
   filters: IBookFilters,
-  paginationOptions: IPaginationOptions
-  ): Promise<IGenericResponse<IBook[]>> => {
-    
-    const {searchTerm, publicationYear, ...filtersData} = filters;
-    const { page, limit, skip, sortBy, sortOrder } =
+  paginationOptions: IPaginationOptions,
+): Promise<IGenericResponse<IBook[]>> => {
+
+  const { searchTerm, publicationYear, ...filtersData } = filters;
+  const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(paginationOptions);
-  
-    const andConditions = [];
-  
-    if (searchTerm) {
+
+  const andConditions = [];
+
+  if (searchTerm) {
     andConditions.push({
-      $or: bookSearchableFields.map(field => ({
+      $or: BookSearchableFields.map((field: any) => ({
         [field]: {
           $regex: searchTerm,
           $options: 'i',
@@ -38,10 +34,8 @@ const getAllBooks = async(
     });
   }
   if (publicationYear) {
-   
     const year = publicationYear.trim();
     if (year.length === 4 && /^\d+$/.test(year)) {
-    
       const regex = `\\b${year}\\b`;
       andConditions.push({
         publicationDate: {
@@ -80,9 +74,9 @@ const getAllBooks = async(
     data: result,
   };
 };
-  
+
 const getSingleBook = async (
-  id: string | Types.ObjectId
+  id: string | Types.ObjectId,
 ): Promise<IGenericResponse<IBook | null>> => {
   const result = await Book.findOne({ _id: id }).lean();
   return {
@@ -92,7 +86,7 @@ const getSingleBook = async (
 
 const updateBook = async (
   id: string | Types.ObjectId,
-  payload: Partial<IBook>
+  payload: Partial<IBook>,
 ): Promise<IBook | null> => {
   const result = await Book.findOneAndUpdate({ _id: id }, payload, {
     new: true,
@@ -105,10 +99,21 @@ const deleteBook = async (id: string): Promise<IBook | null> => {
   return result;
 };
 
+const isRouteValid = async (
+  userId: string,
+  BookId: string
+): Promise<boolean> => {
+  
+  const result = await Book.findOne({ _id: BookId, seller: userId });
+  if (!result || result?.errors) return false;
+  return true;
+};
+
 export const BookService = {
   createBook,
   getAllBooks,
   getSingleBook,
   updateBook,
-  deleteBook
-}
+  deleteBook,
+  isRouteValid
+};

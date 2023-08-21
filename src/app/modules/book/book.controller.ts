@@ -1,5 +1,4 @@
-
-import { Request,  Response } from 'express';
+import { Request, Response } from 'express';
 import httpStatus from 'http-status';
 import catchAsync from '../../../shared/catchAsync';
 import { BookService } from './book.service';
@@ -8,22 +7,19 @@ import { IBook } from './book.interface';
 import pick from '../../../shared/pick';
 import { paginationFields } from '../../../constants/pagination';
 import { bookFilterableFields } from './book.constant';
+import { JwtPayload } from 'jsonwebtoken';
 
+const createBook = catchAsync(async (req: Request, res: Response) => {
+  const book = req.body;
+  book.createdBy = req.user?._id;
+  const result = await BookService.createBook(book);
 
-
-const createBook =  catchAsync(async(req: Request , res: Response) => {
-
-const book = req.body;
-book.createdBy = req.user?._id
-const result = await BookService.createBook(book);
-
-sendResponse<IBook>(res, {
-  statusCode: httpStatus.OK,
-  success: true,
-  message: 'Book Created Successfully!',
-  data: result,
-});
-
+  sendResponse<IBook>(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Book Created Successfully!',
+    data: result,
+  });
 });
 
 const getAllBook = catchAsync(async (req: Request, res: Response) => {
@@ -33,14 +29,15 @@ const getAllBook = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IBook[]>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Books retrieved successfully',
+    message: 'Books Retrieved successfully',
     meta: result.meta,
     data: result.data,
   });
 });
 
 const getSingleBook = catchAsync(async (req: Request, res: Response) => {
-  const result = await BookService.getSingleBook(req.params.id);
+  const id = req.params.id
+  const result = await BookService.getSingleBook(id);
   sendResponse<IBook>(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -58,10 +55,11 @@ const updateBook = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IBook>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Book updated successfully !',
+    message: 'Book Updated successfully !',
     data: result,
   });
 });
+
 const deleteBook = catchAsync(async (req: Request, res: Response) => {
   const id = req.params.id;
   const result = await BookService.deleteBook(id);
@@ -69,15 +67,15 @@ const deleteBook = catchAsync(async (req: Request, res: Response) => {
   sendResponse<IBook>(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Book deleted successfully',
+    message: 'Book Deleted successfully',
     data: result,
   });
 });
 
-export const  BookController = {
+export const BookController = {
   createBook,
   getAllBook,
   getSingleBook,
   updateBook,
-  deleteBook
-}
+  deleteBook,
+};

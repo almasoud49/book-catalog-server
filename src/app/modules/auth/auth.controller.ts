@@ -12,7 +12,9 @@ const signUpUser = catchAsync(async (req: Request, res: Response) => {
     if (user.password !== user.confirmPassword) {
     throw new Error('Password and Confirm Password are not Same');
   }
+
   delete user.confirmPassword;
+  
   const result = await AuthService.signUpUser(user);
   
   sendResponse<IUser>(res, {

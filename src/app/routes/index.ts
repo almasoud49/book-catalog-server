@@ -10,7 +10,7 @@ const router = express.Router();
 const defaultRoutes = [
 
   {
-    path: '/books',
+    path: '/book',
     route: BookRoutes,
   },
   {
